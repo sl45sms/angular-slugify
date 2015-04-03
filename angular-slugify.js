@@ -2,7 +2,10 @@
  * angular-slugify -- provides slugification for AngularJS
  *
  * Copyright © 2013 Paul Smith <paulsmith@pobox.com>
- *
+ * 
+ * Modification, Add _transliteration
+ * Copyright © 2015 Panagiotis Skarvelis <panagiotis@skarvelis.gr>
+ * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the “Software”), to deal
  * in the Software without restriction, including without limitation the rights
@@ -30,7 +33,7 @@
     // Unicode (non-control) characters in the Latin-1 Supplement and Latin
     // Extended-A blocks, transliterated into ASCII characters.
     var charmap = {
-        ' ': " ",
+        ' ': " ",
         '¡': "!",
         '¢': "c",
         '£': "lb",
@@ -250,9 +253,31 @@
         'ž': "z",
         'ſ': "s"
     };
+    
+    function _transliteration(s){
+        if (!s) return "";
+        var charmap = {
+        // Greek Characters UN/ELOT (ELOT 743 - ISO 843)
+        'Α': 'A', 'Β': 'B', 'Γ': 'G', 'Δ': 'D', 'Ε': 'E', 'Ζ': 'Z', 'Η': 'H', 'Θ': 'th',
+        'Ι': 'I', 'Κ': 'K', 'Λ': 'L', 'Μ': 'M', 'Ν': 'N', 'Ξ': 'KS', 'Ο': 'O', 'Π': 'P',
+        'Ρ': 'R', 'Σ': 'S', 'Τ': 'T', 'Υ': 'Y', 'Φ': 'F', 'Χ': 'CH', 'Ψ': 'PS', 'Ω': 'O',
+        'Ά': 'A', 'Έ': 'E', 'Ί': 'I', 'Ό': 'O', 'Ύ': 'Y', 'Ή': 'H', 'Ώ': 'O', 'Ϊ': 'I',
+        'Ϋ': 'Y','α': 'a', 'β': 'b', 'γ': 'g', 'δ': 'd', 'ε': 'e', 'ζ': 'z', 'η': 'h', 
+        'θ': 'th', 'ι': 'i', 'κ': 'k', 'λ': 'l', 'μ': 'm', 'ν': 'n', 'ξ': 'ks', 'ο': 'o',
+        'π': 'p','ρ': 'r', 'σ': 's', 'τ': 't', 'υ': 'y', 'φ': 'f', 'χ': 'ch', 'ψ': 'ps', 
+        'ω': 'o','ά': 'a', 'έ': 'e', 'ί': 'i', 'ό': 'o', 'ύ': 'y', 'ή': 'h', 'ώ': 'o', 
+        'ς': 's','ϊ': 'i', 'ΰ': 'y', 'ϋ': 'y', 'ΐ': 'i', 
+       // Other languages apply here
+    };
+    for (var k in charmap) {
+        s = s.replace(RegExp(k, 'g'), charmap[k]);
+        }
+    return s;
+    }
 
     function _slugify(s) {
         if (!s) return "";
+        s=_transliteration(s);    
         var ascii = [];
         var ch, cp;
         for (var i = 0; i < s.length; i++) {
